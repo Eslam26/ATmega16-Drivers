@@ -1,0 +1,20 @@
+12:34:24 **** Incremental Build of configuration Debug for project GPT ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 GPT.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    1584 bytes (9.7% Full)
+(.text + .data + .bootloader)
+
+Data:         37 bytes (3.6% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+12:34:24 Build Finished. 0 errors, 0 warnings. (took 503ms)
+

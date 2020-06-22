@@ -1,0 +1,18 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <GPT>                                                                         *
+ *  [FILE NAME]   :      <GPT_PBcfg.c>                                                                 *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 6, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 GPT Driver that contains the configuration struct>  *
+ ******************************************************************************************************/
+
+#include "GPT.h"
+
+
+
+
+GPT_configType GPT_configStructure = {
+0,100,PRESCALER_64,0,0,
+0,0,0,0,0,
+0,500,PRESCALER_8,0,0,
+};

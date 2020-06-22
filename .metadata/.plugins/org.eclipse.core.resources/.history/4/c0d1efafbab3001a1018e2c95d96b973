@@ -1,0 +1,59 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <GPT>                                                                         *
+ *  [FILE NAME]   :      <GPT_ModuleTest.c>                                                            *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 6, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 GPT Driver Module Test>                             *
+ ******************************************************************************************************/
+
+
+#include "GPT.h"
+
+uint8 g_tick = 0;
+
+void Timer_0_TestFunction(void)
+{
+	g_tick++;
+
+	PORTC ^= (1<<PC0);
+
+
+}
+
+void Timer_1_TestFunction(void){
+
+	if(g_tick == 2)
+	{
+		PORTC ^= (1<<PC1);
+	}
+}
+
+void Timer_2_TestFunction(void){
+	if(g_tick == 4)
+	{
+		PORTC ^= (1<<PC1);
+		PORTC ^= (1<<PC2);
+		g_tick = 0;
+	}
+}
+
+
+int main(void)
+{
+	DDRC |= 0x07; /* Configure PC0, PC1 and PC2 as output pins */
+	PORTC &= 0xF8; /* Clear PC0, PC1 and PC2 pins */
+
+	SREG |= (1<<7); /* enable global interrupts in MC */
+
+	GPT_init(&GPT_configStructure);
+	GPT_0_setCallBack(Timer_0_TestFunction);
+	GPT_1_setCallBack(Timer_1_TestFunction);
+	GPT_2_setCallBack(Timer_2_TestFunction);
+	GPT_enable(1);
+	GPT_enable(2);
+	GPT_enable(3);
+    while(1)
+    {
+
+    }
+}

@@ -1,0 +1,14 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <GPT>                                                                         *
+ *  [FILE NAME]   :      <GPT_Cfg.h>                                                                   *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 6, 2019>                                                                 *
+ *  [Description} :      <Header file for ATmega16 GPT Driver configuration>                           *
+ ******************************************************************************************************/
+
+#ifndef GPT_CFG_H_
+#define GPT_CFG_H_
+
+#define TIMER0_
+
+#endif /* GPT_CFG_H_ */

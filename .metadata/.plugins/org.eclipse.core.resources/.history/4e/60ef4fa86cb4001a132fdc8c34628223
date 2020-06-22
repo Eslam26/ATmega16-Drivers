@@ -1,0 +1,142 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <SPI>                                                                         *
+ *  [FILE NAME]   :      <SPI.c>                                                                       *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 4, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 SPI Driver>                                         *
+ ******************************************************************************************************/
+
+/*------------------------------------------INCLUDES--------------------------------------------------*/
+#include "SPI.h"
+
+/*-------------------------------------------DEFINES--------------------------------------------------*/
+#define NULL_PTR ((void*)0)
+
+/*------------------------------------------GLOBAL VARIABLES------------------------------------------*/
+static volatile void (*	g_SPI_callBackPtr)(void) = NULL_PTR;
+
+/*----------------------------------------------ISR---------------------------------------------------*/
+ISR(SPI_STC_vect){
+	if (g_SPI_callBackPtr != NULL_PTR) {
+			(*g_SPI_callBackPtr)();
+	}
+}
+
+
+/*-----------------------------------Functions Definitions--------------------------------------------*/
+
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  SPI_init
+ *  [Description]  :  This function is responsible for initializing the SPI Driver
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+void SPI_init(const SPI_configType* SPI_configStructurePtr)
+{
+
+	/* setting the direction of SPI pins according to Master/Slave Mode Selection */
+	if(SPI_configStructurePtr->masterSlaveSelectionConfig == MASTER_SPI_MODE)
+	{
+		/*
+		 * SS -> Output Pin
+		 * MOSI -> Output Pin
+		 * MISO -> Input Pin
+		 * SCK -> Output Pin
+		 */
+		SS_PIN_DIRECTION_REGISTER = SS_PIN_DIRECTION_REGISTER | (ONE<<SS_PIN_NUMBER);
+		MOSI_PIN_DIRECTION_REGISTER = MOSI_PIN_DIRECTION_REGISTER | (ONE<<MOSI_PIN_NUMBER);
+		MISO_PIN_DIRECTION_REGISTER = MISO_PIN_DIRECTION_REGISTER & ~(ONE<<MISO_PIN_NUMBER);
+		SCK_PIN_DIRECTION_REGISTER = SCK_PIN_DIRECTION_REGISTER | (ONE<<SCK_PIN_NUMBER);
+	}
+	else if(SPI_configStructurePtr->masterSlaveSelectionConfig == SLAVE_SPI_MODE)
+	{
+		/*
+		 * SS -> Input Pin
+		 * MOSI -> Input Pin
+		 * MISO -> Output Pin
+		 * SCK -> Slave Pin
+		 */
+		SS_PIN_DIRECTION_REGISTER = SS_PIN_DIRECTION_REGISTER & (~(ONE<<SS_PIN_NUMBER));
+		MOSI_PIN_DIRECTION_REGISTER = MOSI_PIN_DIRECTION_REGISTER & (~(ONE<<MOSI_PIN_NUMBER));
+		MISO_PIN_DIRECTION_REGISTER = MISO_PIN_DIRECTION_REGISTER | (ONE<<MISO_PIN_NUMBER);
+		SCK_PIN_DIRECTION_REGISTER = SCK_PIN_DIRECTION_REGISTER & (~(ONE<<SCK_PIN_NUMBER));
+	}
+	else
+	{
+
+	}
+
+	SPCR = (SPCR & 0b01111111) | ((SPI_configStructurePtr->interruptEnableModeConfig & 0b00000001)<<(SPIE));
+	SPCR = (SPCR & 0b11011111) | ((SPI_configStructurePtr->dataOrderModeConfig & 0b00000001)<<(DORD));
+	SPCR = (SPCR & 0b11101111) | ((SPI_configStructurePtr->masterSlaveSelectionConfig & 0b00000001)<<(MSTR));
+
+
+	if(SPI_configStructurePtr->dataModesConfig == SPI_MODE_0)
+	{
+		SPCR = (SPCR & 0b11110111) | ((ZERO & 0b00000001)<<(CPOL));
+		SPCR = (SPCR & 0b11111011) | ((ZERO & 0b00000001)<<(CPHA));
+	}
+	else if(SPI_configStructurePtr->dataModesConfig == SPI_MODE_1)
+	{
+		SPCR = (SPCR & 0b11110111) | ((ZERO & 0b00000001)<<(CPOL));
+		SPCR = (SPCR & 0b11111011) | ((ONE  & 0b00000001)<<(CPHA));
+	}
+	else if(SPI_configStructurePtr->dataModesConfig == SPI_MODE_2)
+	{
+		SPCR = (SPCR & 0b11110111) | ((ONE & 0b00000001)<<(CPOL));
+		SPCR = (SPCR & 0b11111011) | ((ZERO & 0b00000001)<<(CPHA));
+	}
+	else if(SPI_configStructurePtr->dataModesConfig == SPI_MODE_3)
+	{
+		SPCR = (SPCR & 0b11110111) | ((ONE & 0b00000001)<<(CPOL));
+		SPCR = (SPCR & 0b11111011) | ((ONE & 0b00000001)<<(CPHA));
+	}
+	else
+	{
+
+	}
+
+
+	SPCR = (SPCR & 0b11111100) | ((SPI_configStructurePtr->clockPrescalerConfig & 0b00000011)<<(SPR0));
+	SPSR = (SPCR & 0b11111110) | (((SPI_configStructurePtr->clockPrescalerConfig & 0b00000100)>>2)<<(SPI2X));
+
+	SPCR = (SPCR & 0b10111111) | ((ONE)<<(SPE));
+
+}
+
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  SPI_sendByte
+ *  [Description]  :  This function is responsible for sending a byte
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+void SPI_sendByte(const uint8 data) 
+{
+	SPDR = data; //send data by SPI
+	while(BIT_IS_CLEAR(SPSR,SPIF)){} //wait until SPI interrupt flag=ONE (data is sent correctly)
+}
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  SPI_recieveByte
+ *  [Description]  :  This function is responsible for receiving a byte
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+uint8 SPI_recieveByte(void)
+{
+   while(BIT_IS_CLEAR(SPSR,SPIF)){} //wait until SPI interrupt flag=ONE(data is receive correctly)
+   return SPDR; //return the received byte from SPI data register
+}
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  SPI_setCallBack
+ *  [Description]  :  This function is responsible for getting the address of the function which
+ *  					will be executed when SPI transmission completes
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+void SPI_setCallBack(void (*SPI_setCallBack_Ptr)(void)) {
+	g_SPI_callBackPtr = SPI_setCallBack_Ptr;
+}

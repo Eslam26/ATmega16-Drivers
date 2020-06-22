@@ -1,0 +1,14 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <ADC>                                                                         *
+ *  [FILE NAME]   :      <ADC_Cfg.h>                                                                   *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 4, 2019>                                                                 *
+ *  [Description} :      <Header file for ATmega16 ADC Driver configuration>                           *
+ ******************************************************************************************************/
+
+#ifndef ADC_CFG_H_
+#define ADC_CFG_H_
+
+
+
+#endif /* ADC_CFG_H_ */

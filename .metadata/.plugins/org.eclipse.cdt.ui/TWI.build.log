@@ -1,0 +1,20 @@
+12:34:25 **** Incremental Build of configuration Debug for project TWI ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 TWI.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    4100 bytes (25.0% Full)
+(.text + .data + .bootloader)
+
+Data:         12 bytes (1.2% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+12:34:26 Build Finished. 0 errors, 0 warnings. (took 331ms)
+

@@ -1,0 +1,13 @@
+/*
+ * External_Interrupts_Cfg.h
+ *
+ *  Created on: Jun 19, 2020
+ *      Author: eslamelnaggar
+ */
+
+#ifndef EXTERNAL_INTERRUPTS_CFG_H_
+#define EXTERNAL_INTERRUPTS_CFG_H_
+
+
+
+#endif /* EXTERNAL_INTERRUPTS_CFG_H_ */

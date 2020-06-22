@@ -1,0 +1,14 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <External Interrupts>                                                         *
+ *  [FILE NAME]   :      <External_Interrupts_Cfg.h>                                                   *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 4, 2019>                                                                 *
+ *  [Description} :      <Header file for ATmega16 External Interrupts Driver Configuration>           *
+ ******************************************************************************************************/
+
+#ifndef EXTERNAL_INTERRUPTS_CFG_H_
+#define EXTERNAL_INTERRUPTS_CFG_H_
+
+
+
+#endif /* EXTERNAL_INTERRUPTS_CFG_H_ */

@@ -1,0 +1,207 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <GPT>                                                                         *
+ *  [FILE NAME]   :      <GPT.c>                                                                       *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 6, 2019>                                                                 *
+ *  [Description} :      <Source file for the ATmega16 GPT driver>                                     *
+ ******************************************************************************************************/
+
+#include "GPT.h"
+#define NULL_PTR ((void *)0)
+
+/*------------------------------------------GLOBAL VARIABLES------------------------------------------*/
+static volatile void (*g_GPT_0_callBackPtr)(void) = NULL_PTR;
+static volatile void (*g_GPT_1_callBackPtr)(void) = NULL_PTR;
+static volatile void (*g_GPT_2_callBackPtr)(void) = NULL_PTR;
+static const Gpt_timerConfig *GPT_timerStructurePtr = NULL_PTR;
+static uint8 GPT_0_prescalerValue = 0;
+static uint8 GPT_1_prescalerValue = 0;
+static uint8 GPT_2_prescalerValue = 0;
+static uint8 GPT_0_enableState = GPT_DISABLED;
+static uint8 GPT_1_enableState = GPT_DISABLED;
+static uint8 GPT_2_enableState = GPT_DISABLED;
+
+/*----------------------------------------------ISR---------------------------------------------------*/
+ISR(TIMER0_COMP_vect) {
+	if (g_GPT_0_callBackPtr != NULL_PTR) {
+		(*g_GPT_0_callBackPtr)();
+
+	}
+}
+
+ISR(TIMER1_COMPA_vect) {
+	if (g_GPT_1_callBackPtr != NULL_PTR) {
+		(*g_GPT_1_callBackPtr)();
+	}
+}
+
+ISR(TIMER2_COMP_vect) {
+	if (g_GPT_2_callBackPtr != NULL_PTR) {
+		(*g_GPT_2_callBackPtr)();
+	}
+}
+
+/*-----------------------------------Functions Definitions--------------------------------------------*/
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  GPT_init
+ *  [Description]  :  This function is responsible for initializing the GPT Driver
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+void GPT_init(const GPT_configType *GPT_configStructurePtr) {
+	uint8 counter = 0;
+	GPT_timerStructurePtr = GPT_configStructurePtr->Timers_Channels;
+
+	while (counter < NUM_TIMERS) {
+		if (GPT_timerStructurePtr->intializedNotIntializedConfig
+				== GPT_CHANNEL_INTIALIZED) {
+			switch (GPT_timerStructurePtr->channelNumberConfig) {
+			case CHANNEL_ID_0:
+				TCNT0 = 0;
+				OCR0 = GPT_timerStructurePtr->ticksNumberConfig;
+				TCCR0 = (TCCR0 & 0b10000111) | (1) << (WGM01);
+				TCCR0 = (TCCR0 & 0b01111111) | (1) << (FOC0);
+				GPT_0_prescalerValue =
+						GPT_timerStructurePtr->clockPrescalerConfig;
+				break;
+			case CHANNEL_ID_1:
+				TCNT1 = 0;
+				OCR1A = GPT_timerStructurePtr->ticksNumberConfig;
+				GPT_1_prescalerValue =
+						GPT_timerStructurePtr->clockPrescalerConfig;
+				TCCR1B = (TCCR1B & 0b111110111) | (1) << (WGM12);
+				TCCR1A = (TCCR1A & 0b111110111) | (1) << (FOC1B);
+				TCCR1A = (TCCR1A & 0b111111011) | (1) << (FOC1A);
+				break;
+			case CHANNEL_ID_2:
+				TCNT2 = 0;
+				OCR2 = GPT_timerStructurePtr->ticksNumberConfig;
+				TCCR2 = (TCCR0 & 0b10000111) | (1) << (WGM21);
+				TCCR2 = (TCCR0 & 0b01111111) | (1) << (FOC0);
+				GPT_2_prescalerValue =
+						GPT_timerStructurePtr->clockPrescalerConfig;
+				break;
+			default:
+				break;
+			}
+		}
+		GPT_timerStructurePtr++;
+		counter++;
+	}
+}
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  GPT_enable
+ *  [Description]  :  This function is responsible for enabling the required Gpt channel
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+void GPT_enable(uint8 channelID) {
+	switch (channelID) {
+	case CHANNEL_ID_0:
+		if (GPT_0_enableState == GPT_DISABLED) {
+			GPT_0_enableState = ENABLED;
+			TIMSK = (TIMSK & 0b11111101) | ((1) << (OCIE0));
+			TCCR0 = (TCCR0 & 0b11111000)
+					| ((GPT_0_prescalerValue & 0b00000111) << (CS00));
+		} else {
+
+		}
+		break;
+	case CHANNEL_ID_1:
+		if (GPT_1_enableState == GPT_DISABLED) {
+			GPT_1_enableState = ENABLED;
+			TIMSK = (TIMSK & 0b11101111) | ((1) << (OCIE1A));
+			TCCR1B = (TCCR0 & 0b11111000)
+					| ((GPT_1_prescalerValue & 0b00000111) << (CS00));
+		} else {
+
+		}
+		break;
+	case CHANNEL_ID_2:
+		if (GPT_2_enableState == GPT_DISABLED) {
+			GPT_2_enableState = ENABLED;
+			TIMSK = (TIMSK & 0b01111111) | ((1) << (OCIE2));
+			TCCR2 = (TCCR0 & 0b11111000)
+					| ((GPT_2_prescalerValue & 0b00000111) << (CS00));
+		} else {
+
+		}
+		break;
+	}
+}
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  GPT_disable
+ *  [Description]  :  This function is responsible for disabling the required Gpt channel
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+void GPT_disable(uint8 channelID) {
+	switch (channelID) {
+	case CHANNEL_ID_0:
+		if (GPT_0_enableState == ENABLED) {
+			GPT_0_enableState = GPT_DISABLED;
+			TIMSK = (TIMSK & 0b11111101) | ((1) << (OCIE0));
+			TCCR0 = (TCCR0 & 0b11111000) | ((0 & 0b00000111) << (CS00));
+		} else {
+
+		}
+
+		break;
+	case CHANNEL_ID_1:
+		if (GPT_1_enableState == ENABLED) {
+			GPT_1_enableState = GPT_DISABLED;
+			TIMSK = (TIMSK & 0b11101111) | ((1) << (OCIE1A));
+			TCCR1B = (TCCR0 & 0b11111000) | ((0 & 0b00000111) << (CS00));
+		} else {
+
+		}
+
+		break;
+	case CHANNEL_ID_2:
+		if (GPT_2_enableState == GPT_ENABLED) {
+			GPT_2_enableState = GPT_DISABLED;
+			TIMSK = (TIMSK & 0b01111111) | ((1) << (OCIE2));
+			TCCR2 = (TCCR0 & 0b11111000) | ((0 & 0b00000111) << (CS00));
+		} else {
+
+		}
+
+		break;
+	default:
+		break;
+	}
+}
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  GPT_0_setCallBack
+ *  [Description]  :  This function is responsible for getting the address of the function which
+ *  					will be executed every Timer 0 compare match
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+void GPT_0_setCallBack(void (*GPT_0_setCallBack_Ptr)(void)) {
+	g_GPT_0_callBackPtr = GPT_0_setCallBack_Ptr;
+}
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  GPT_1_setCallBack
+ *  [Description]  :  This function is responsible for getting the address of the function which
+ *  					will be executed every Timer 1 compare match
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+void GPT_1_setCallBack(void (*GPT_1_setCallBack_Ptr)(void)) {
+	g_GPT_1_callBackPtr = GPT_1_setCallBack_Ptr;
+}
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  GPT_0_setCallBack
+ *  [Description]  :  This function is responsible for getting the address of the function which
+ *  					will be executed every Timer 2 compare match
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+void GPT_2_setCallBack(void (*GPT_2_setCallBack_Ptr)(void)) {
+	g_GPT_2_callBackPtr = GPT_2_setCallBack_Ptr;
+}
+

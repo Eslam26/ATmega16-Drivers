@@ -1,0 +1,18 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <GPT>                                                                         *
+ *  [FILE NAME]   :      <GPT_PBcfg.c>                                                                 *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 6, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 GPT Driver that contains the configuration struct>  *
+ ******************************************************************************************************/
+
+#include "GPT.h"
+
+
+
+
+GPT_configType GPT_configStructure = {
+CHANNEL_ID_0, GPT_0_CHANNEL_INTIALIZED_NOT_INTIALIZED_CONFIG,50,PRESCALER_8,0,0,
+CHANNEL_ID_1, GPT_1_CHANNEL_INTIALIZED_NOT_INTIALIZED_CONFIG,1000,PRESCALER_256,0,0,
+CHANNEL_ID_2, GPT_2_CHANNEL_INTIALIZED_NOT_INTIALIZED_CONFIG,500,PRESCALER_8,0,0,
+};

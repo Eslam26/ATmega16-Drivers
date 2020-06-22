@@ -1,0 +1,84 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <TWI>                                                                         *
+ *  [FILE NAME]   :      <TWI_ModuleTest.c>                                                            *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 4, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 TWI Driver Module Test>                             *
+ ******************************************************************************************************/
+
+#include "TWI.h"
+
+#define SUCCESS 1
+#define ERROR 0
+
+
+uint8 EEPROM_writeByte(uint16 u16addr, uint8 u8data);
+uint8 EEPROM_readByte(uint16 u16addr, uint8 *u8data);
+
+int main(){
+
+	uint8 data = 0;
+	TWI_init(&TWI_configStructure);
+	EEPROM_writeByte(0x0311, 0x5E); /* Write 0x5E in 0x0311 address in the external EEPROM */
+	_delay_ms(10);
+	EEPROM_readByte(0x0311, &data); /* Read 0x0311 address of the external EEPROM */
+	while(1){
+
+	}
+}
+
+uint8 EEPROM_writeByte(uint16 u16addr, uint8 u8data)
+{
+
+    TWI_start();
+    if (TWI_getStatus() != TW_START)
+        return ERROR;
+
+    TWI_write((uint8)(0xA0 | ((u16addr & 0x0700)>>7)));
+    if (TWI_getStatus() != TW_MT_SLA_W_ACK)
+        return ERROR;
+
+    TWI_write((uint8)(u16addr));
+    if (TWI_getStatus() != TW_MT_DATA_ACK)
+        return ERROR;
+
+    TWI_write(u8data);
+    if (TWI_getStatus() != TW_MT_DATA_ACK)
+        return ERROR;
+
+    TWI_stop();
+
+    return SUCCESS;
+}
+
+uint8 EEPROM_readByte(uint16 u16addr, uint8 *u8data)
+{
+
+    TWI_start();
+    if (TWI_getStatus() != TW_START)
+        return ERROR;
+
+    TWI_write((uint8)((0xA0) | ((u16addr & 0x0700)>>7)));
+    if (TWI_getStatus() != TW_MT_SLA_W_ACK)
+        return ERROR;
+
+    TWI_write((uint8)(u16addr));
+    if (TWI_getStatus() != TW_MT_DATA_ACK)
+        return ERROR;
+
+    TWI_start();
+    if (TWI_getStatus() != TW_REP_START)
+        return ERROR;
+
+    TWI_write((uint8)((0xA0) | ((u16addr & 0x0700)>>7) | 1));
+    if (TWI_getStatus() != TW_MT_SLA_R_ACK)
+        return ERROR;
+
+    *u8data = TWI_readWithNACK();
+    if (TWI_getStatus() != TW_MR_DATA_ACK)
+        return ERROR;
+
+    TWI_stop();
+    return SUCCESS;
+}
+

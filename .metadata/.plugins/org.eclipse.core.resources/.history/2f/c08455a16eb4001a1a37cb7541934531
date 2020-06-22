@@ -1,0 +1,18 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <TWI>                                                                         *
+ *  [FILE NAME]   :      <TWI_ModuleTest.c>                                                            *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 4, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 TWI Driver Module Test>                             *
+ ******************************************************************************************************/
+
+#include "TWI.h"
+
+
+
+int main(){
+
+	while(1){
+
+	}
+}

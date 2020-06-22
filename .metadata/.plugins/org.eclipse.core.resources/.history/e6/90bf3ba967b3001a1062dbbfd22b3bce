@@ -1,0 +1,83 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <GPT>                                                                         *
+ *  [FILE NAME]   :      <GPT.h>                                                                       *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 6, 2019>                                                                 *
+ *  [Description} :      <Header file for the ATmega16 GPT driver>                                     *
+ ******************************************************************************************************/
+
+#ifndef GPT_H_
+#define GPT_H_
+
+/*------------------------------------------INCLUDES--------------------------------------------*/
+#include "micro_config.h"
+#include "std_types.h"
+#include "common_macros.h"
+#include "GPT_Cfg.h"
+
+/*--------------------------------------------DEFINES------------------------------------------*/
+
+/*---------------------------------------------ENUMS-------------------------------------------*/
+typedef uint8 Gpt_ChannelType;
+
+typedef uint16 Gpt_ValueType;
+
+typedef enum
+{
+	NO_PRESCALER, PRESCALER_8, PRESCALER_64, PRESCALER_256, PRESCALER_1024, PRESCALER_EXTERNAL_SOURCE_FALLING_EDGE, PRESCALER_EXTERNAL_SOURCE_RISING_EDGE
+}Gpt_PrescalerValue;
+
+typedef enum
+{
+	GPT_MODE_NORMAL, GPT_MODE_SLEEP
+}Gpt_ModeType;
+
+typedef enum
+{
+	GPT_CH_MODE_CONTINUOUS,GPT_CH_MODE_ONESHOT
+}Gpt_ChannelMode;
+
+
+
+typedef volatile void (*Gpt_Notification_Channel)(void) ;
+
+enum
+{
+	CHANNEL_ID_0, CHANNEL_ID_1, CHANNEL_ID_2
+};
+
+typedef enum{
+	GPT_DISABLE_NOTIFICATION, GPT_ENABLE_NOTIFICATION
+}Gpt_DisableEnableNotification;
+
+typedef enum{
+	NOTIFICATION_DISABLED, NOTIFICATION_ENABLED
+}Gpt_ChannelNotificationState;
+
+typedef enum
+{
+	INTIALIZED, RUNNING, STOPPED, EXPIRED, NOT_INTIALIZED
+}Gpt_ChannelStates;
+typedef struct
+{
+	Gpt_ChannelType ChannelID;
+	Gpt_ValueType NumberOfTicks;
+	Gpt_ModeType ChannelModeType;
+	Gpt_PrescalerValue PrescalerValue;
+	Gpt_ChannelMode channelMode;
+	Gpt_Notification_Channel ChannelNotificationApi;
+	Gpt_DisableEnableNotification ChannelNotificationState;
+}Gpt_TimerConfig;
+
+typedef struct
+{
+	Gpt_TimerConfig Timers_Channels[NUM_TIMERS];
+}GPT_configType;
+
+/*--------------------------------------------STRUCTS------------------------------------------*/
+/*---------------------------------------FUNCTIONS PROTOTYPES----------------------------------*/
+void GPT_init(const GPT_configType* GPT_configStructurePtr);
+/*--------------------------------------------EXTERNS---------------------------+--------------*/
+
+
+#endif /* GPT_H_ */

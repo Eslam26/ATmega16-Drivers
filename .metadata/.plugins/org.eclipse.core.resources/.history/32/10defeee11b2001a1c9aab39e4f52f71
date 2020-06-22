@@ -1,0 +1,85 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <SPI>                                                                         *
+ *  [FILE NAME]   :      <SPI.h>                                                                       *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 4, 2019>                                                                 *
+ *  [Description} :      <Header file for ATmega16 SPI Driver>                                         *
+ ******************************************************************************************************/
+
+#ifndef SPI_H_
+#define SPI_H_
+
+#include "std_types.h"
+#include "micro_config.h"
+#include "common_macros.h"
+#include "SPI_Cfg.h"
+
+/*----------------------------------DEFINES-----------------------------------*/
+#define SS_PIN_DIRECTION_REGISTER DDRB
+#define MOSI_PIN_DIRECTION_REGISTER DDRB
+#define MISO_PIN_DIRECTION_REGISTER DDRB
+#define SCK_PIN_DIRECTION_REGISTER DDRB
+
+#define SS_PIN_NUMBER 4
+#define MOSI_PIN_NUMBER 5
+#define MISO_PIN_NUMBER 6
+#define SCK_PIN_NUMBER 7
+
+#define DEFAULT_SPI_INTERRUPT_MODE SPI_INTERRUPT_ENABLE_OFF
+#define DEFAULT_SPI_DATA_ORDER SPI_MSB_TRANSMITED_FIRST
+#define DEFAULT_SPI_MASTER_SLAVE MASTER_SPI_MODE
+#define DEFAULT_SPI_DATA_MODE SPI_MODE_0
+#define DEFAULT_SPI_CLOCK_PRESCALER_SELECTOR F_OSC_4
+#define DEFAULT_SPI_DOUBLE_SPEED_BIT SPI_DOUBLE_SPEED_BIT_MODE_OFF
+
+#define ZERO 0
+#define ONE 1
+
+/*---------------------------------ENUMS---------------------------------------*/
+typedef enum {
+	SPI_INTERRUPT_ENABLE_OFF, SPI_INTERRUPT_ENABLE_ON
+} SPI_INTERRUPT_ENABLE_MODE;
+
+typedef enum{
+	SPI_MSB_TRANSMITED_FIRST, SPI_LSB_TRANSMITED_FIRST
+}SPI_DATA_ORDER_MODE;
+
+typedef enum{
+	SLAVE_SPI_MODE, MASTER_SPI_MODE
+}SPI_MASTER_SLAVE_SELECT;
+
+typedef enum{
+	SPI_MODE_0, SPI_MODE_1, SPI_MODE_2, SPI_MODE_3
+}SPI_DATA_MODES;
+
+typedef enum{
+	F_OSC_4, F_OSC_16, F_OSC_64, F_OSC_128, F_OSC_2, F_OSC_8, F_OSC_32
+}SPI_CLOCK_PRESCALER;
+
+typedef enum{
+	SPI_DOUBLE_SPEED_BIT_MODE_OFF, SPI_DOUBLE_SPEED_BIT_MODE_ON
+}SPI_DOUBLE_SPEED_BIT_MODE;
+
+/*----------------------------------STRUCTS-----------------------------------*/
+
+typedef struct{
+	SPI_INTERRUPT_ENABLE_MODE interruptEnableModeConfig;
+	SPI_DATA_ORDER_MODE dataOrderModeConfig;
+	SPI_MASTER_SLAVE_SELECT masterSlaveSelectionConfig;
+	SPI_DATA_MODES dataModesConfig;
+	SPI_CLOCK_PRESCALER clockPrescalerConfig;
+	SPI_DOUBLE_SPEED_BIT_MODE doubleSpeedBitModeConfig;
+}SPI_configType;
+
+/*******************************************************************************
+ *                      Functions Prototypes                                   *
+ *******************************************************************************/
+void SPI_init(const SPI_configType* SPI_configStructurePtr);
+void SPI_sendByte(const uint8 data);
+uint8 SPI_recieveByte(void);
+void SPI_setCallBack(void (*SPI_setCallBack_Ptr)(void));
+
+
+/*-------------------------------EXTERNS----------------------------------------*/
+extern SPI_configType SPI_configStructure;
+#endif

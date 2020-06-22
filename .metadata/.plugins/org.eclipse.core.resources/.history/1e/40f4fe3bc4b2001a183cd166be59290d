@@ -1,0 +1,8 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <USART>                                                                       *
+ *  [FILE NAME]   :      <USART_PBcfg.c>                                                               *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 5, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 USART Driver that contains the configuration struct>*
+ ******************************************************************************************************/
+

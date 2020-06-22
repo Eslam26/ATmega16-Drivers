@@ -1,0 +1,28 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <SPI>                                                                         *
+ *  [FILE NAME]   :      <SPI_PBcfg.c>                                                                 *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 4, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 SPI Driver that contains the configuration struct>  *
+ ******************************************************************************************************/
+
+#include "SPI.h"
+
+
+#define SPI_INTERRUPT_MODE DEFAULT_SPI_INTERRUPT_MODE
+#define SPI_DATA_ORDER DEFAULT_SPI_DATA_ORDER
+#define SPI_MASTER_SLAVE DEFAULT_SPI_MASTER_SLAVE
+#define SPI_DATA_MODE DEFAULT_SPI_DATA_MODE
+#define SPI_CLOCK_PRESCALER_SELECTOR DEFAULT_SPI_CLOCK_PRESCALER_SELECTOR
+#define SPI_DOUBLE_SPEED_BIT DEFAULT_SPI_DOUBLE_SPEED_BIT
+
+SPI_configType SPI_configStructure ={
+		SPI_INTERRUPT_MODE,
+		SPI_DATA_ORDER,
+		SPI_MASTER_SLAVE,
+		SPI_DATA_MODE,
+		SPI_CLOCK_PRESCALER_SELECTOR,
+		SPI_DOUBLE_SPEED_BIT
+};
+
+

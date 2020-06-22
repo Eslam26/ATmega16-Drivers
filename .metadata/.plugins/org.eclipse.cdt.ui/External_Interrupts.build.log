@@ -1,0 +1,20 @@
+12:34:23 **** Incremental Build of configuration Debug for project External_Interrupts ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 External_Interrupts.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    4778 bytes (29.2% Full)
+(.text + .data + .bootloader)
+
+Data:         18 bytes (1.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+12:34:23 Build Finished. 0 errors, 0 warnings. (took 372ms)
+

@@ -1,0 +1,67 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <GPT>                                                                         *
+ *  [FILE NAME]   :      <GPT.h>                                                                       *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 6, 2019>                                                                 *
+ *  [Description} :      <Header file for the ATmega16 GPT driver>                                     *
+ ******************************************************************************************************/
+
+#ifndef GPT_H_
+#define GPT_H_
+
+/*------------------------------------------INCLUDES--------------------------------------------*/
+#include "micro_config.h"
+#include "std_types.h"
+#include "common_macros.h"
+#include "GPT_Cfg.h"
+
+/*--------------------------------------------DEFINES------------------------------------------*/
+#define NUM_TIMERS 3
+/*---------------------------------------------ENUMS-------------------------------------------*/
+typedef uint8 Gpt_ChannelType;
+
+typedef uint16 Gpt_ValueType;
+
+typedef enum
+{
+	NO_PRESCALER, PRESCALER_8, PRESCALER_64, PRESCALER_256, PRESCALER_1024, PRESCALER_EXTERNAL_SOURCE_FALLING_EDGE, PRESCALER_EXTERNAL_SOURCE_RISING_EDGE
+}GPT_CLOCK_PRESCALER;
+
+typedef enum
+{
+	GPT_MODE_NORMAL, GPT_MODE_SLEEP
+}GPT_NORMAL_SLEEP_MODE;
+
+typedef enum
+{
+	GPT_CH_MODE_CONTINUOUS,GPT_CH_MODE_ONESHOT
+}GPT_CONTINOUS_ONESHOT_MODE;
+
+typedef enum
+{
+	CHANNEL_ID_0, CHANNEL_ID_1, CHANNEL_ID_2
+}GPT_CHANNEL_ID;
+
+typedef enum
+{
+
+}GPI_INTERRUPT_ENABLE_MODE;
+
+/*--------------------------------------------STRUCTS------------------------------------------*/
+
+typedef struct{
+
+}Gpt_timerConfig;
+
+
+typedef struct
+{
+	Gpt_TimerConfig Timers_Channels[NUM_TIMERS];
+}GPT_configType;
+
+/*---------------------------------------FUNCTIONS PROTOTYPES----------------------------------*/
+void GPT_init(const GPT_configType* GPT_configStructurePtr);
+/*--------------------------------------------EXTERNS---------------------------+--------------*/
+
+
+#endif /* GPT_H_ */

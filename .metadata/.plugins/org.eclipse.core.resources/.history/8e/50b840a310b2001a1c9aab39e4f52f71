@@ -1,0 +1,31 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <ADC>                                                                         *
+ *  [FILE NAME]   :      <ADC_PBcfg.c>                                                                 *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 5, 2019>                                                                 *
+ *  [Description} :      <Source file for ADC configuration struct>                                    *
+ ******************************************************************************************************/
+
+#include "ADC.h"
+
+#define AREF_PIN_MODE DEFAULT_AREF_PIN_MODE
+#define LEFT_ADJUST_RESULT_MODE DEFAULT_LEFT_ADJUST_RESULT_MODE
+#define INPUT_CHANNEL_GAIN_SELECTION_MODE DEFAULT_INPUT_CHANNEL_GAIN_SELECTION_MODE
+#define ADC_AUTO_TRIGGER_MODE DEFAULT_ADC_AUTO_TRIGGER_MODE
+#define ADC_INTERRUPT_ENABLE_MODE DEFAULT_ADC_INTERRUPT_ENABLE_MODE
+#define DIVISION_FACTOR DEFAULT_DIVISION_FACTOR
+#define ADC_AUTO_TRIGGER_SOURCE_MODE DEFAULT_ADC_AUTO_TRIGGER_SOURCE_MODE
+
+
+ADC_configType ADC_configStructure ={
+		AREF_PIN_MODE,
+		LEFT_ADJUST_RESULT_MODE,
+		INPUT_CHANNEL_GAIN_SELECTION_MODE,
+		ADC_AUTO_TRIGGER_MODE,
+		ADC_INTERRUPT_ENABLE_MODE,
+		DIVISION_FACTOR,
+		ADC_AUTO_TRIGGER_SOURCE_MODE
+
+};
+
+

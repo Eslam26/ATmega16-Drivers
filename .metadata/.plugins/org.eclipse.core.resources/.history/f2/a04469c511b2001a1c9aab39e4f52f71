@@ -1,0 +1,15 @@
+/*******************************************************************************************************
+ *  [FILE NAME]   :      <External_interrupts_PBcfg.c>                                                 *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 4, 2019>                                                                 *
+ *  [Description} :      <source file for ATmega16 external interrupts configuration struct>           *
+ ******************************************************************************************************/
+
+
+/*-------------------------------------------INCLUDES-------------------------------------------------*/
+#include "External_Interrupts.h"
+
+
+/*--------------------------------------CONFIGURATION STRUCTURE---------------------------------------*/
+E_Interrupts_configType interruptsConfig = {INT0_CONFIGURATION_MODE_CONFIG, INT1_CONFIGURATION_MODE_CONFIG, INT2_CONFIGURATION_MODE_CONFIG};
+

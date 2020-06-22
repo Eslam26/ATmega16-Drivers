@@ -1,0 +1,76 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <GPT>                                                                         *
+ *  [FILE NAME]   :      <GPT.h>                                                                       *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 6, 2019>                                                                 *
+ *  [Description} :      <Header file for the ATmega16 GPT driver>                                     *
+ ******************************************************************************************************/
+
+#ifndef GPT_H_
+#define GPT_H_
+
+/*------------------------------------------INCLUDES--------------------------------------------*/
+#include "micro_config.h"
+#include "std_types.h"
+#include "common_macros.h"
+#include "GPT_Cfg.h"
+
+/*--------------------------------------------DEFINES------------------------------------------*/
+#define NUM_TIMERS 3
+/*---------------------------------------------ENUMS-------------------------------------------*/
+
+
+typedef uint16 GPT_TICKS_NUMBER;
+
+typedef enum
+{
+	NO_PRESCALER, PRESCALER_8, PRESCALER_64, PRESCALER_256, PRESCALER_1024, PRESCALER_EXTERNAL_SOURCE_FALLING_EDGE, PRESCALER_EXTERNAL_SOURCE_RISING_EDGE
+}GPT_CLOCK_PRESCALER;
+
+typedef enum
+{
+	GPT_MODE_NORMAL, GPT_MODE_SLEEP
+}GPT_NORMAL_SLEEP_MODE;
+
+typedef enum
+{
+	GPT_CH_MODE_CONTINUOUS,GPT_CH_MODE_ONESHOT
+}GPT_CONTINOUS_ONESHOT_MODE;
+
+typedef enum
+{
+	CHANNEL_ID_0, CHANNEL_ID_1, CHANNEL_ID_2
+}GPT_CHANNEL_NUMBER;
+
+typedef enum
+{
+	GPI_INTERRUPT_ENABLE_OFF, GPI_INTERRUPT_ENABLE_ON
+}GPI_INTERRUPT_ENABLE_MODE;
+
+/*--------------------------------------------STRUCTS------------------------------------------*/
+
+typedef struct{
+
+	GPT_CHANNEL_NUMBER channelNumberConfig;
+	GPT_TICKS_NUMBER ticksNumberConfig;
+	GPT_CLOCK_PRESCALER clockPrescalerConfig;
+	GPT_NORMAL_SLEEP_MODE normalSleepModeConfig;
+	GPT_CONTINOUS_ONESHOT_MODE continousOneShotModeConfig;
+	GPI_INTERRUPT_ENABLE_MODE interruptEnableModeConfig;
+
+}Gpt_timerConfig;
+
+
+typedef struct
+{
+	Gpt_timerConfig Timers_Channels[NUM_TIMERS];
+}GPT_configType;
+
+/*---------------------------------------FUNCTIONS PROTOTYPES----------------------------------*/
+void GPT_init(const GPT_configType* GPT_configStructurePtr);
+void GPT_enable(uint8 channelID);
+void GPT_disable(uint8 channelID);
+/*--------------------------------------------EXTERNS---------------------------+--------------*/
+extern GPT_configType GPT_configStructure;
+
+#endif /* GPT_H_ */

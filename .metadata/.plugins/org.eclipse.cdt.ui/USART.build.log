@@ -1,0 +1,62 @@
+12:34:26 **** Incremental Build of configuration Debug for project USART ****
+make all 
+Building file: ../USART.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"USART.d" -MT"USART.o" -c -o "USART.o" "../USART.c"
+In file included from ../micro_config.h:18,
+                 from ../USART.h:13,
+                 from ../USART.c:10:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+../USART.c: In function 'USART_TXC_setCallBack':
+../USART.c:154: warning: function return types not compatible due to 'volatile'
+../USART.c: In function 'USART_RXC_setCallBack':
+../USART.c:165: warning: function return types not compatible due to 'volatile'
+../USART.c: In function 'USART_UDRE_setCallBack':
+../USART.c:176: warning: function return types not compatible due to 'volatile'
+Finished building: ../USART.c
+ 
+Building file: ../USART_ModuleTest.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"USART_ModuleTest.d" -MT"USART_ModuleTest.o" -c -o "USART_ModuleTest.o" "../USART_ModuleTest.c"
+In file included from ../micro_config.h:18,
+                 from ../USART.h:13,
+                 from ../USART_ModuleTest.c:9:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../USART_ModuleTest.c
+ 
+Building file: ../USART_PBcfg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"USART_PBcfg.d" -MT"USART_PBcfg.o" -c -o "USART_PBcfg.o" "../USART_PBcfg.c"
+In file included from ../micro_config.h:18,
+                 from ../USART.h:13,
+                 from ../USART_PBcfg.c:10:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../USART_PBcfg.c
+ 
+Building target: USART.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,USART.map -mmcu=atmega16 -o "USART.elf"  ./USART.o ./USART_ModuleTest.o ./USART_PBcfg.o   
+Finished building target: USART.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S USART.elf  >"USART.lss"
+Finished building: USART.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 USART.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    1516 bytes (9.3% Full)
+(.text + .data + .bootloader)
+
+Data:         18 bytes (1.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+12:34:27 Build Finished. 0 errors, 6 warnings. (took 1s.650ms)
+

@@ -1,0 +1,96 @@
+/*******************************************************************************************************
+ *  [MODULE]      :      <ADC>                                                                         *
+ *  [FILE NAME]   :      <ADC.c>                                                                       *
+ *  [AUTHOR]      :      <Eslam EL-Naggar>                                                             *
+ *  [DATE CREATED]:      <Dec 5, 2019>                                                                 *
+ *  [Description} :      <Source file for the ATmega16 ADC driver>                                     *
+ ******************************************************************************************************/
+
+
+/*--------------------------------------------INCLUDES------------------------------------------------*/
+#include "ADC.h"
+
+/*---------------------------------------------DEFINES------------------------------------------------*/
+#define NULL_PTR ((void*)0)
+
+/*-------------------------------------------GLOBAL VARIABLES-----------------------------------------*/
+static volatile void (*	g_ADC_callBackPtr)(void) = NULL_PTR;
+
+
+/*--------------------------------------------ISR DEFINITIONS-----------------------------------------*/
+
+ISR(ADC_vect){
+	if (g_ADC_callBackPtr != NULL_PTR) {
+			(*g_ADC_callBackPtr)();
+	}
+}
+
+/*------------------------------------------FUNCTIONS DEFINITIONS------------------------------------*/
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  ADC_init
+ *  [Description]  :  This function is responsible for initialize ADC driver
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+void ADC_init(const ADC_configType* ADC_configStructurePtr)
+{
+
+	/* Setting the AREF Pin mode */
+	ADMUX = (ADMUX & 0b00111111) | ((ADC_configStructurePtr->referenceSelectionConfig & 0b00000011)<<(REFS0));
+	/* Setting the Left Adjust Result mode */
+	ADMUX = (ADMUX & 0b11011111) | ((ADC_configStructurePtr->leftAdjustResultModeConfig & 0b00000001)<<(ADLAR));
+	/* Setting the input channels and gain selections configuration */
+	ADMUX = (ADMUX & 0b11100000) | ((ADC_configStructurePtr->inputChannelGainSelectionsConfig & 0b00011111)<<(MUX0));
+
+	/* Enable ADC */
+	ADCSRA = (ADCSRA & 0b01111111) | ((ONE & 0b00000001)<<(ADEN));
+	/* Setting Auto Trigger mode configuration */
+	ADCSRA = (ADCSRA & 0b11011111) | ((ADC_configStructurePtr->autoTriggerModeConfig & 0b00000001)<<(ADATE));
+	/* Setting Interrupt mode configuration */
+	ADCSRA = (ADCSRA & 0b11110111) | ((ADC_configStructurePtr->interruptEnableModeConfig & 0b00000001)<<(ADIE));
+	/* Setting pre-scaler configuration */
+	ADCSRA = (ADCSRA & 0b11111000) | ((ADC_configStructurePtr->prescalerConfig & 0b00000111)<<(ADPS0));
+	/* Setting Auto Trigger Source configuration */
+    SFIOR = (SFIOR & 0b00011111) | ((ADC_configStructurePtr->autoTriggerSourceConfig & 0b00000111)<<(ADTS0));
+
+    /* Checking if the interrupt mode is enabled, Setting the I-BIt */
+    if(ADC_configStructurePtr->interruptEnableModeConfig == ADC_INTERRUPT_ENABLE_ON)
+    {
+        if(BIT_IS_CLEAR(SREG,I_BIT))
+        {
+        	SET_BIT(SREG,I_BIT);
+        }
+    }
+
+}
+
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  ADC_readChannel
+ *  [Description]  :  This function is responsible for reading the data from the analog pin
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+uint16 ADC_readChannel(uint8 channel_num)
+{
+	ADMUX &= ~0x0F;
+	ADMUX |= channel_num;
+	/* start conversion */
+	SET_BIT(ADCSRA,ADSC);
+	/* wait for conversion to complete */
+	while(BIT_IS_CLEAR(ADCSRA,ADIF));
+	/* clear ADIF by write '1' to it :) */
+	SET_BIT(ADCSRA,ADIF);
+	/* return the data register */
+	return ADC;
+}
+
+/*----------------------------------------------------------------------------------------------------
+ *  [Function Name]:  ADC_setCallBack
+ *  [Description]  :  This function is responsible for getting the address of the function which
+ *  					will be executed when ADC conversion completes
+ *  [Returns]      :  This function returns void
+ ----------------------------------------------------------------------------------------------------*/
+
+void ADC_setCallBack(void (*ADC_setCallBack_Ptr)(void)) {
+	g_ADC_callBackPtr = ADC_setCallBack_Ptr;
+}

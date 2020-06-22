@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;TWI/I2C_ModuleTest.c&apos; to &apos;TWI_ModuleTest.c&apos;" description="Rename resource &apos;I2C_ModuleTest.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="I2C_ModuleTest.c" name="TWI_ModuleTest.c" stamp="1592626493297" updateReferences="true"/>
+</session>

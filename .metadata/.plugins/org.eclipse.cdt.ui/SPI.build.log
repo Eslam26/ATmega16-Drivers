@@ -1,0 +1,20 @@
+12:34:25 **** Incremental Build of configuration Debug for project SPI ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 SPI.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:     952 bytes (5.8% Full)
+(.text + .data + .bootloader)
+
+Data:          8 bytes (0.8% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+12:34:25 Build Finished. 0 errors, 0 warnings. (took 350ms)
+
